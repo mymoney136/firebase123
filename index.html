@@ -7,7 +7,7 @@
     <style>
         :root { 
             --primary: #4f46e5; 
-            --bg: #1e1b4b; /* צבע רקע כהה וחדש */
+            --bg: #1e1b4b; 
             --accent: #10b981; 
             --edit: #f59e0b; 
             --danger: #ef4444; 
@@ -15,7 +15,7 @@
         }
         body { 
             font-family: 'Segoe UI', sans-serif; 
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); /* רקע מדורג מעניין */
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); 
             background-attachment: fixed;
             margin: 0; 
             padding: 20px; 
@@ -61,10 +61,11 @@
 
 <div class="card">
     <div id="loginArea">
-        <h2>👋התחברות למערכת</h2>
+        <h2>👋 התחברות למערכת</h2>
         <input type="text" id="teacherUser" placeholder="שם משתמש">
         <input type="password" id="teacherPass" placeholder="סיסמה">
-        <button onclick="login()">התחברות</button>
+        <button id="loginBtn" onclick="login()">התחברות</button>
+        <p id="authStatus" style="font-size: 12px; color: #666; text-align: center; margin-top: 10px;">מתחבר לשרת...</p>
     </div>
 
     <div id="dashboard" style="display:none;">
@@ -84,10 +85,11 @@
 </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-    const firebaseConfig = {
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
         apiKey: "AIzaSyDvnS8L9r2LMKcUD78Ix7bldVp9qzbYwtk",
         authDomain: "tast-7808e.firebaseapp.com",
         projectId: "tast-7808e",
@@ -98,12 +100,43 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
     let teacherKey = "";
     let selectedImages = {}; 
     let editingImages = {}; 
+    let currentUser = null;
+
+    // MANDATORY RULE 3: Auth before queries
+    const initAuth = async () => {
+        try {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+        } catch (e) {
+            console.error("Auth failed:", e);
+            document.getElementById('authStatus').innerText = "שגיאת חיבור. נסה לרענן את הדף.";
+        }
+    };
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUser = user;
+            document.getElementById('authStatus').innerText = "מחובר לשרת בהצלחה ✅";
+            console.log("Authenticated as:", user.uid);
+        }
+    });
+
+    initAuth();
+
+    // Helper for Rule 1: Strict Paths
+    const getPublicCol = (colName) => collection(db, 'artifacts', appId, 'public', 'data', colName);
 
     window.login = () => {
+        if (!currentUser) return alert("המתן לחיבור עם השרת...");
         const user = document.getElementById('teacherUser').value.trim();
         const pass = document.getElementById('teacherPass').value.trim();
         if(!user || !pass) return;
@@ -115,14 +148,16 @@
     };
 
     window.createClass = async () => {
+        if (!currentUser) return;
         const name = document.getElementById('newClassName').value.trim();
         if(!name) return;
         const code = Math.random().toString(36).substring(2, 7).toUpperCase();
         try {
-            await addDoc(collection(db, "classes"), { 
+            await addDoc(getPublicCol("classes"), { 
                 teacherId: teacherKey, 
                 name, 
-                code
+                code,
+                createdAt: Date.now()
             });
             document.getElementById('newClassName').value = '';
         } catch (e) {
@@ -132,7 +167,12 @@
 
     function handleError(e, action) {
         console.error(`Error in ${action}:`, e);
-        alert(`שגיאה ב${action}: ${e.message}`);
+        if (e.code === 'permission-denied') {
+            alert(`שגיאת הרשאות ב${action}. המערכת מנסה להתחבר מחדש...`);
+            initAuth();
+        } else {
+            alert(`שגיאה ב${action}: ${e.message}`);
+        }
     }
 
     window.handleImg = (e, code) => {
@@ -165,14 +205,15 @@
     };
 
     function loadClasses() {
-        const q = query(collection(db, "classes"), where("teacherId", "==", teacherKey));
+        if (!currentUser) return;
+        // RULE 2: Keep query simple
+        const q = query(getPublicCol("classes"), where("teacherId", "==", teacherKey));
         onSnapshot(q, (snap) => {
             const list = document.getElementById('classesList');
             list.innerHTML = '';
 
             snap.forEach(cDoc => {
                 const c = cDoc.data();
-                const classId = cDoc.id;
                 const div = document.createElement('div');
                 div.className = 'class-box';
                 const now = new Date().toISOString().slice(0, 16);
@@ -199,10 +240,11 @@
                 list.appendChild(div);
                 syncTasks(c.code);
             });
-        });
+        }, (err) => handleError(err, "טעינת כיתות"));
     }
 
     window.addTask = async (code) => {
+        if (!currentUser) return;
         const title = document.getElementById(`task_${code}`).value;
         const startTime = new Date(document.getElementById(`start_${code}`).value).getTime();
         const endTime = new Date(document.getElementById(`end_${code}`).value).getTime();
@@ -211,12 +253,13 @@
         if(!title && !img) return;
 
         try {
-            await addDoc(collection(db, "tasks"), {
+            await addDoc(getPublicCol("tasks"), {
                 classCode: code,
                 title: title || "משימה",
                 imageUrl: img,
                 startTime,
-                endTime
+                endTime,
+                createdAt: Date.now()
             });
             document.getElementById(`task_${code}`).value = '';
             selectedImages[code] = null;
@@ -227,7 +270,9 @@
     };
 
     function syncTasks(code) {
-        onSnapshot(query(collection(db, "tasks"), where("classCode", "==", code)), (snap) => {
+        if (!currentUser) return;
+        const q = query(getPublicCol("tasks"), where("classCode", "==", code));
+        onSnapshot(q, (snap) => {
             const container = document.getElementById(`tasks_${code}`);
             if(!container) return;
             container.innerHTML = '';
@@ -264,13 +309,14 @@
                 `;
                 container.appendChild(item);
             });
-        });
+        }, (err) => handleError(err, "סנכרון משימות"));
     }
 
     window.handleDeleteTask = async (taskId) => {
+        if(!currentUser) return;
         if(confirm("למחוק את המשימה הזו?")) {
             try {
-                await deleteDoc(doc(db, 'tasks', taskId));
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'tasks', taskId));
             } catch (e) {
                 handleError(e, "מחיקת משימה");
             }
@@ -286,6 +332,7 @@
     };
 
     window.saveEdit = async (taskId) => {
+        if(!currentUser) return;
         const title = document.getElementById(`edit_title_${taskId}`).value;
         const newImg = editingImages[taskId];
         
@@ -295,7 +342,7 @@
         }
 
         try {
-            await updateDoc(doc(db, "tasks", taskId), updates);
+            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'tasks', taskId), updates);
             toggleEdit(taskId);
             editingImages[taskId] = null;
         } catch (e) {
