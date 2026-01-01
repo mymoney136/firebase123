@@ -151,6 +151,26 @@ button {
 
 .hidden { display: none; }
 
+/* עיצוב דפי עבודה שהועלו ע"י תלמידים */
+.student-work-box {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 15px;
+    border: 1px solid var(--accent);
+}
+.work-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+.work-grid img {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+}
+
 </style>
 </head>
 <body>
@@ -226,19 +246,13 @@ async function compressImage(base64Str) {
 window.login = (userVal, passVal) => {
     const user = userVal || document.getElementById('teacherUser').value.trim();
     const pass = passVal || document.getElementById('teacherPass').value.trim();
-    
     if(!user || !pass) return;
-
     teacherKey = user + "_" + pass;
-    
-    // שמירה בזיכרון לחיבור אוטומטי
     localStorage.setItem('teacherUser', user);
     localStorage.setItem('teacherPass', pass);
-
     document.getElementById('displayName').innerText = user;
     document.getElementById('loginArea').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
-    
     loadClasses();
 };
 
@@ -247,7 +261,6 @@ window.logout = () => {
     location.reload();
 };
 
-// חיבור אוטומטי
 window.addEventListener('DOMContentLoaded', () => {
     const u = localStorage.getItem('teacherUser');
     const p = localStorage.getItem('teacherPass');
@@ -334,10 +347,9 @@ window.addTask = async (code) => {
             title: title || "משימה חדשה", 
             imageUrl: img,
             startTime: new Date(start).getTime(),
-            endTime: new Date(end).getTime()
+            endTime: new Date(end).getTime(),
+            worksheets: null // מאגר לדפי עבודה של תלמידים
         });
-        
-        // ניקוי שדות
         document.getElementById(`task_${code}`).value = '';
         selectedImages[code] = null;
         document.getElementById(`label_${code}`).innerText = "📷";
@@ -355,19 +367,33 @@ function syncTasks(code) {
             const t = tDoc.data();
             const item = document.createElement('div');
             item.className = 'task-item';
+            
+            // בדיקה אם תלמידים העלו דפי עבודה
+            let studentWorkHTML = "";
+            if (t.worksheets && t.worksheets.length > 0) {
+                studentWorkHTML = `
+                <div class="student-work-box">
+                    <small>📄 דפי עבודה שהועלו ע"י: <b>${t.worksheetBy}</b></small>
+                    <div class="work-grid">
+                        <img src="${t.worksheets[0]}" onclick="window.open(this.src)">
+                        <img src="${t.worksheets[1]}" onclick="window.open(this.src)">
+                    </div>
+                </div>`;
+            }
+
             item.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <b>${t.title}</b>
                     <button style="background:var(--danger); padding:5px 10px; font-size:12px; cursor:pointer;" onclick="deleteTask('${tDoc.id}')">🗑️</button>
                 </div>
                 ${t.imageUrl ? `<img src="${t.imageUrl}" class="task-img-preview">` : ''}
+                ${studentWorkHTML}
             `;
             container.appendChild(item);
         });
     });
 }
 
-// פונקציית המחיקה המאובטחת המבוססת על סיסמת המורה
 window.deleteTask = async (id) => { 
     const passConfirm = prompt("פעולה זו תמחוק את המשימה לצמיתות.\nאנא הזן את סיסמת ההתחברות שלך לאישור:");
     const teacherPass = localStorage.getItem('teacherPass');
