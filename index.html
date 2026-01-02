@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ניהול משימות מורים - גרסה מלאה</title>
+    <title>ניהול משימות- מורים</title>
     <style>
         :root {
             --primary: #10b981; --accent: #3b82f6; --purple: #8b5cf6; --edit: #f59e0b; --danger: #ef4444;
@@ -40,7 +40,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        input, select, textarea {
+        input, select {
             width: 100%; padding: 16px; margin: 10px 0; border-radius: 15px;
             border: 1px solid var(--glass-border); background: rgba(0,0,0,0.2);
             color: white; font-size: 16px; outline: none; box-sizing: border-box;
@@ -53,16 +53,14 @@
         .btn-main { background: white; color: #1e3a8a; }
         .btn-action { background: var(--primary); color: white; margin-top: 10px; }
 
-        /* Task Card and Image */
         .task-card {
             background: rgba(255,255,255,0.08); border-radius: 20px; padding: 20px;
             margin-bottom: 15px; border-right: 6px solid var(--accent);
             display: flex; flex-direction: column; gap: 15px;
         }
         .task-top { display: flex; justify-content: space-between; align-items: flex-start; }
-        .task-info b { font-size: 20px; display: block; margin-bottom: 5px; }
-        .task-info span { font-size: 13px; opacity: 0.7; }
-
+        .task-info b { font-size: 20px; display: block; }
+        
         .task-img {
             width: 100%; max-height: 300px; object-fit: contain; border-radius: 15px;
             background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);
@@ -82,13 +80,13 @@
 
 <div id="loginArea" class="container" style="padding-top: 15vh;">
     <div class="card" style="text-align:center;">
-        <h1>ניהול משימות - מורה 🍎</h1>
+        <h1>כניסת מורה 🍎</h1>
         <input type="text" id="teacherUser" placeholder="שם משתמש">
         <div class="pass-box">
             <input type="password" id="teacherPass" placeholder="סיסמה">
             <span class="eye-icon" onclick="togglePass()">👁️</span>
         </div>
-        <button class="btn-main" onclick="login()" style="margin-top:20px;">התחברות למערכת</button>
+        <button class="btn-main" onclick="login()" style="margin-top:20px;">התחברות</button>
     </div>
 </div>
 
@@ -96,7 +94,7 @@
     <div class="dashboard-header">
         <div style="display:flex; justify-content:space-between; align-items:center;">
             <div><b id="userName" style="font-size:24px;"></b></div>
-            <div style="font-size:30px; cursor:pointer;" onclick="logout()">🏃‍♂️</div>
+            <div style="cursor:pointer; font-size:14px; opacity:0.7;" onclick="logout()">יציאה ➔</div>
         </div>
         <div class="nav-tabs">
             <button class="nav-btn active" onclick="switchTab('tasksTab', this)">משימות</button>
@@ -116,7 +114,7 @@
                 <input type="file" id="taskFile" accept="image/*" onchange="handleFile(this)">
                 <span id="fileStatus"></span>
                 <button id="submitBtn" class="btn-action" onclick="saveTask()">פרסם משימה</button>
-                <button id="cancelBtn" class="hidden" onclick="resetForm()" style="background:transparent; color:white;">ביטול עריכה</button>
+                <button id="cancelBtn" class="hidden" onclick="resetForm()" style="background:transparent; color:white;">ביטול</button>
             </div>
             <div id="taskListContainer"></div>
         </div>
@@ -132,7 +130,7 @@
 
         <div id="scheduleTab" class="tab-content hidden">
             <div class="card">
-                <h3>📅 עריכת מערכת שעות</h3>
+                <h3>📅 עריכת מערכת</h3>
                 <select id="schClass" onchange="loadSch()"></select>
                 <div id="schEditor"></div>
                 <button class="btn-action" onclick="saveSch()" style="margin-top:20px;">שמור מערכת</button>
@@ -162,11 +160,16 @@
 
     window.togglePass = () => { const p = document.getElementById('teacherPass'); p.type = p.type === 'password' ? 'text' : 'password'; };
 
+    // כניסה ושמירה ב-localStorage
     window.login = () => {
-        const u = document.getElementById('teacherUser').value.trim(), p = document.getElementById('teacherPass').value.trim();
+        const u = document.getElementById('teacherUser').value.trim();
+        const p = document.getElementById('teacherPass').value.trim();
         if(!u || !p) return;
+        
         teacherKey = u + "_" + p;
-        localStorage.setItem('teacherUser', u); localStorage.setItem('teacherPass', p);
+        localStorage.setItem('teacherUser', u);
+        localStorage.setItem('teacherPass', p);
+        
         document.getElementById('userName').innerText = "שלום, " + u;
         document.getElementById('loginArea').classList.add('hidden');
         document.getElementById('mainDashboard').classList.remove('hidden');
@@ -189,7 +192,7 @@
                 const c = cDoc.data(); myClassCodes.push(c.code);
                 const opt = `<option value="${c.code}">${c.name}</option>`;
                 tSel.innerHTML += opt; sSel.innerHTML += opt;
-                cDisp.innerHTML += `<div class="card" style="padding:15px; margin-bottom:10px;"><b>${c.name}</b> (קוד: ${c.code})</div>`;
+                cDisp.innerHTML += `<div class="card" style="padding:15px; margin-bottom:10px; display:flex; justify-content:space-between;"><b>${c.name}</b> <span>${c.code}</span></div>`;
             });
             syncTasks();
         });
@@ -203,17 +206,13 @@
                 const t = tDoc.data();
                 if(t.teacherId === teacherKey || myClassCodes.includes(t.classCode)) {
                     const date = new Date(t.endTime).toLocaleString('he-IL');
-                    // תמיכה בשני שמות השדות לתמונות (ישן וחדש)
                     const imgSrc = t.fileData || t.imageUrl || t.image;
                     const imgPreview = imgSrc ? `<img src="${imgSrc}" class="task-img">` : '';
 
                     list.innerHTML += `
                         <div class="task-card">
                             <div class="task-top">
-                                <div class="task-info">
-                                    <b>${t.title}</b>
-                                    <span>📅 עד: ${date} | כיתה: ${t.classCode}</span>
-                                </div>
+                                <div class="task-info"><b>${t.title}</b><span>📅 עד: ${date} | כיתה: ${t.classCode}</span></div>
                                 <div class="btn-group">
                                     <div class="icon-btn edit-btn" onclick="editT('${tDoc.id}')">✏️</div>
                                     <div class="icon-btn del-btn" onclick="delT('${tDoc.id}')">🗑️</div>
@@ -245,7 +244,6 @@
         currentImageB64 = t.fileData || t.imageUrl || null;
         document.getElementById('formTitle').innerText = "✏️ עריכה";
         document.getElementById('cancelBtn').classList.remove('hidden');
-        document.getElementById('formCard').scrollIntoView({behavior:'smooth'});
     };
 
     window.resetForm = () => {
@@ -256,6 +254,7 @@
     };
 
     window.delT = async (id) => { if(confirm("למחוק?")) await deleteDoc(doc(db, "tasks", id)); };
+
     window.createClass = async () => {
         const n = document.getElementById('newClassName').value.trim(); if(!n) return;
         const c = Math.random().toString(36).substring(2, 7).toUpperCase();
@@ -263,6 +262,7 @@
         document.getElementById('newClassName').value = '';
     };
 
+    // מערכת שעות
     const days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי"];
     window.loadSch = async () => {
         const code = document.getElementById('schClass').value; if(!code) return;
@@ -290,13 +290,25 @@
         const snap = await getDocs(query(collection(db, "classes"), where("code", "==", code)));
         await updateDoc(doc(db, "classes", snap.docs[0].id), { schedule }); alert("נשמר!");
     };
+
     window.switchTab = (id, btn) => {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.remove('hidden'); btn.classList.add('active');
     };
+
     window.logout = () => { localStorage.clear(); location.reload(); };
-    window.onload = () => { if(localStorage.getItem('teacherUser')) login(); };
+
+    // בדיקה בטעינת הדף אם המורה כבר מחובר
+    window.onload = () => {
+        const u = localStorage.getItem('teacherUser');
+        const p = localStorage.getItem('teacherPass');
+        if(u && p) {
+            document.getElementById('teacherUser').value = u;
+            document.getElementById('teacherPass').value = p;
+            window.login(); // כניסה אוטומטית
+        }
+    };
 </script>
 </body>
 </html>
