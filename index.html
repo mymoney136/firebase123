@@ -1,73 +1,73 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ניהול משימות - ממשק מורה זכוכית פרימיום</title>
-    <style>
-        :root {
-            --primary: #10b981; --accent: #3b82f6; --purple: #8b5cf6; --edit: #f59e0b; --danger: #ef4444;
-            --glass-bg: rgba(255, 255, 255, 0.07);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --glass-shadow: rgba(0, 0, 0, 0.35);
-        }
-        body {
-            font-family: -apple-system, system-ui, sans-serif;
-            margin: 0; padding: 0; direction: rtl; min-height: 100vh; color: white;
-            background: radial-gradient(circle at top right, #1e3a8a, #0f172a, #000);
-            background-attachment: fixed;
-        }
-        .nav-bar {
-            display: flex; justify-content: space-around; background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(15px); padding: 15px; border-bottom: 1px solid var(--glass-border);
-            position: sticky; top: 0; z-index: 1000;
-        }
-        .nav-item {
-            opacity: 0.6; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s;
-            padding: 8px 15px; border-radius: 12px;
-        }
-        .nav-item.active { opacity: 1; background: var(--glass-bg); border: 1px solid var(--glass-border); }
-        .container { width: 100%; max-width: 700px; margin: 20px auto; padding: 0 15px; box-sizing: border-box; }
-        .card {
-            background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border); border-radius: 28px; padding: 25px;
-            margin-bottom: 25px; box-shadow: 0 10px 40px var(--glass-shadow);
-        }
-        input, select, textarea {
-            width: 100%; padding: 14px; margin: 8px 0; border-radius: 14px;
-            border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05);
-            color: white; font-size: 16px; outline: none; transition: 0.3s;
-        }
-        input:focus { background: rgba(255, 255, 255, 0.1); border-color: var(--primary); }
-        button {
-            width: 100%; padding: 15px; border-radius: 14px; border: none;
-            font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px;
-        }
-        .btn-save { background: var(--primary); color: white; }
-        .btn-purple { background: var(--purple); color: white; }
-        .task-item {
-            background: rgba(255,255,255,0.05); border-radius: 22px; padding: 20px;
-            margin-top: 20px; border-right: 6px solid var(--accent); position: relative;
-        }
-        .submission-chip {
-            display: inline-flex; align-items: center; background: rgba(16, 185, 129, 0.2);
-            border: 1px solid var(--primary); padding: 5px 12px; border-radius: 15px;
-            margin: 4px; font-size: 13px; color: #fff;
-        }
-        .day-row {
-            background: rgba(255,255,255,0.03); padding: 18px; border-radius: 20px;
-            margin-top: 15px; border-right: 4px solid var(--purple);
-        }
-        .lesson-row { display: grid; grid-template-columns: 2fr 1fr auto; gap: 8px; margin-top: 8px; }
-        .activity-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px; background: rgba(255,255,255,0.03); border-radius: 15px; margin-bottom: 10px;
-        }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #555; margin-left: 8px; display: inline-block; }
-        .status-dot.online { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
-        .task-img-preview { width: 100%; border-radius: 18px; margin: 15px 0; border: 1px solid var(--glass-border); }
-        .hidden { display: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>ניהול משימות - ממשק מורה</title>
+<style>
+:root {
+--primary: #10b981; --accent: #3b82f6; --purple: #8b5cf6; --edit: #f59e0b; --danger: #ef4444;
+--glass-bg: rgba(255, 255, 255, 0.07);
+--glass-border: rgba(255, 255, 255, 0.15);
+--glass-shadow: rgba(0, 0, 0, 0.35);
+}
+body {
+font-family: -apple-system, system-ui, sans-serif;
+margin: 0; padding: 0; direction: rtl; min-height: 100vh; color: white;
+background: radial-gradient(circle at top right, #1e3a8a, #0f172a, #000);
+background-attachment: fixed;
+}
+.nav-bar {
+display: flex; justify-content: space-around; background: rgba(0, 0, 0, 0.5);
+backdrop-filter: blur(15px); padding: 15px; border-bottom: 1px solid var(--glass-border);
+position: sticky; top: 0; z-index: 1000;
+}
+.nav-item {
+opacity: 0.6; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s;
+padding: 8px 15px; border-radius: 12px;
+}
+.nav-item.active { opacity: 1; background: var(--glass-bg); border: 1px solid var(--glass-border); }
+.container { width: 100%; max-width: 700px; margin: 20px auto; padding: 0 15px; box-sizing: border-box; }
+.card {
+background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+border: 1px solid var(--glass-border); border-radius: 28px; padding: 25px;
+margin-bottom: 25px; box-shadow: 0 10px 40px var(--glass-shadow);
+}
+input, select, textarea {
+width: 100%; padding: 14px; margin: 8px 0; border-radius: 14px;
+border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05);
+color: white; font-size: 16px; outline: none; transition: 0.3s;
+}
+input:focus { background: rgba(255, 255, 255, 0.1); border-color: var(--primary); }
+button {
+width: 100%; padding: 15px; border-radius: 14px; border: none;
+font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px;
+}
+.btn-save { background: var(--primary); color: white; }
+.btn-purple { background: var(--purple); color: white; }
+.task-item {
+background: rgba(255,255,255,0.05); border-radius: 22px; padding: 20px;
+margin-top: 20px; border-right: 6px solid var(--accent); position: relative;
+}
+.submission-chip {
+display: inline-flex; align-items: center; background: rgba(16, 185, 129, 0.2);
+border: 1px solid var(--primary); padding: 5px 12px; border-radius: 15px;
+margin: 4px; font-size: 13px; color: #fff;
+}
+.day-row {
+background: rgba(255,255,255,0.03); padding: 18px; border-radius: 20px;
+margin-top: 15px; border-right: 4px solid var(--purple);
+}
+.lesson-row { display: grid; grid-template-columns: 2fr 1fr auto; gap: 8px; margin-top: 8px; }
+.activity-item {
+display: flex; justify-content: space-between; align-items: center;
+padding: 12px; background: rgba(255,255,255,0.03); border-radius: 15px; margin-bottom: 10px;
+}
+.status-dot { width: 10px; height: 10px; border-radius: 50%; background: #555; margin-left: 8px; display: inline-block; }
+.status-dot.online { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
+.task-img-preview { width: 100%; border-radius: 18px; margin: 15px 0; border: 1px solid var(--glass-border); }
+.hidden { display: none; }
+</style>
 </head>
 <body>
 
@@ -143,230 +143,232 @@
 </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc, getDocs, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc, getDocs, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getMessaging } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDvnS8L9r2LMKcUD78Ix7bldVp9qzbYwtk",
-        authDomain: "tast-7808e.firebaseapp.com",
-        projectId: "tast-7808e",
-        storageBucket: "tast-7808e.firebasestorage.app",
-        messagingSenderId: "99024860024",
-        appId: "1:99024860024:web:24ab70c10254a2014fce8d"
-    };
+const firebaseConfig = {
+    apiKey: "AIzaSyDvnS8L9r2LMKcUD78Ix7bldVp9qzbYwtk",
+    authDomain: "tast-7808e.firebaseapp.com",
+    projectId: "tast-7808e",
+    storageBucket: "tast-7808e.firebasestorage.app",
+    messagingSenderId: "99024860024",
+    appId: "1:99024860024:web:24ab70c10254a2014fce8d"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    let teacherKey = "", currentFileB64 = null, classDocIds = {};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const messaging = getMessaging(app);
 
-    window.switchTab = (tab) => {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById('tab-' + tab).classList.remove('hidden');
-        if (event) event.currentTarget.classList.add('active');
-    };
+let teacherKey = "", currentFileB64 = null, classDocIds = {};
 
-    window.login = () => {
-        const u = document.getElementById('teacherUser').value.trim();
-        const p = document.getElementById('teacherPass').value.trim();
-        if(!u || !p) return alert("הזן פרטים");
-        teacherKey = u + "_" + p;
-        localStorage.setItem('teacherUser', u);
-        localStorage.setItem('teacherPass', p);
-        startApp(u);
-    };
+window.switchTab = (tab) => {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.remove('hidden');
+    if (event) event.currentTarget.classList.add('active');
+};
 
-    function startApp(u) {
-        document.getElementById('displayName').innerText = u;
-        document.getElementById('loginArea').classList.add('hidden');
-        document.getElementById('navBar').classList.remove('hidden');
-        document.getElementById('dashboard').classList.remove('hidden');
-        loadData();
-        loadActivity();
-    }
+window.login = () => {
+    const u = document.getElementById('teacherUser').value.trim();
+    const p = document.getElementById('teacherPass').value.trim();
+    if(!u || !p) return alert("הזן פרטים");
+    teacherKey = u + "_" + p;
+    localStorage.setItem('teacherUser', u);
+    localStorage.setItem('teacherPass', p);
+    startApp(u);
+};
 
-    window.onload = () => {
-        const u = localStorage.getItem('teacherUser'), p = localStorage.getItem('teacherPass');
-        if(u && p) { teacherKey = u + "_" + p; startApp(u); }
-    };
+function startApp(u) {
+    document.getElementById('displayName').innerText = u;
+    document.getElementById('loginArea').classList.add('hidden');
+    document.getElementById('navBar').classList.remove('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    loadData();
+    loadActivity();
+}
 
-    function loadActivity() {
-        onSnapshot(collection(db, "activity"), (snap) => {
-            const log = document.getElementById('activityLog');
-            let users = [];
-            snap.forEach(d => users.push(d.data()));
-            users.sort((a,b) => (b.lastSeen?.toMillis() || 0) - (a.lastSeen?.toMillis() || 0));
-            log.innerHTML = users.map(u => {
-                const isOnline = (new Date() - u.lastSeen?.toDate()) / 1000 < 300;
-                return `
-                <div class="activity-item">
-                    <span><span class="status-dot ${isOnline?'online':''}"></span><b>${u.name}</b> (${u.classCode})</span>
-                    <small>${isOnline ? 'מחובר/ת' : 'נראה/תה לאחרונה: ' + u.lastSeen?.toDate().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})}</small>
-                </div>`;
-            }).join('');
-        });
-    }
+window.onload = () => {
+    const u = localStorage.getItem('teacherUser'), p = localStorage.getItem('teacherPass');
+    if(u && p) { teacherKey = u + "_" + p; startApp(u); }
+};
 
-    function loadData() {
-        onSnapshot(query(collection(db, "classes"), where("teacherId", "==", teacherKey)), (snap) => {
-            const select = document.getElementById('targetClass'), schedSelect = document.getElementById('scheduleClassSelect'), list = document.getElementById('classesList');
-            select.innerHTML = ''; schedSelect.innerHTML = '<option value="">בחר כיתה...</option>'; list.innerHTML = '';
-            snap.forEach(cDoc => {
-                const c = cDoc.data();
-                classDocIds[c.code] = cDoc.id;
-                const opt = `<option value="${c.code}">${c.name}</option>`;
-                select.innerHTML += opt; schedSelect.innerHTML += opt;
-                list.innerHTML += `<div class="card"><h3>🏫 כיתה: ${c.name} (${c.code})</h3><div id="tasks_${c.code}"></div></div>`;
-                syncTasks(c.code);
-            });
-        });
-    }
-
-    function syncTasks(code) {
-        onSnapshot(query(collection(db, "tasks"), where("classCode", "==", code)), (snap) => {
-            const container = document.getElementById(`tasks_${code}`);
-            if(!container) return;
-            let tasks = [];
-            snap.forEach(d => tasks.push({id: d.id, ...d.data()}));
-            tasks.sort((a,b) => a.endTime - b.endTime);
-            container.innerHTML = tasks.map(t => `
-            <div class="task-item">
-                <div style="display:flex; justify-content:space-between; align-items:start;">
-                    <div>
-                        <b>${t.title}</b><br>
-                        <small style="color:var(--edit);">סיום: ${new Date(t.endTime).toLocaleString('he-IL')}</small>
-                    </div>
-                    <div style="display:flex; gap:5px;">
-                        <button onclick="editTask('${t.id}')" style="width:35px; height:35px; background:var(--edit); padding:0;">✏️</button>
-                        <button onclick="deleteTask('${t.id}')" style="width:35px; height:35px; background:var(--danger); padding:0;">🗑️</button>
-                    </div>
-                </div>
-                ${t.imageUrl ? `<img src="${t.imageUrl}" class="task-img-preview">` : ''}
-                <div id="subs-${t.id}" style="margin-top:15px;"></div>
-            </div>`).join('');
-            tasks.forEach(t => monitorSubmissions(t.id));
-        });
-    }
-
-    function monitorSubmissions(taskId) {
-        onSnapshot(query(collection(db, "submissions"), where("taskId", "==", taskId)), (snap) => {
-            const div = document.getElementById(`subs-${taskId}`);
-            if(!div) return;
-            let names = [];
-            snap.forEach(d => { if(d.data().completed) names.push(d.data().studentName); });
-            div.innerHTML = names.length > 0 ?
-            `<b>הגישו (${names.length}):</b><br>` + names.map(n => `<span class="submission-chip">👤 ${n}</span>`).join('') :
-            `<span style="opacity:0.5; font-size:12px;">אין הגשות עדיין</span>`;
-        });
-    }
-
-    window.saveTask = async () => {
-        const title = document.getElementById('taskTitle').value.trim() || "משימה", 
-              code = document.getElementById('targetClass').value,
-              start = new Date(document.getElementById('startTime').value).getTime() || Date.now(),
-              end = new Date(document.getElementById('endTime').value).getTime(), 
-              editId = document.getElementById('editingId').value;
-
-        if(!end) return alert("הזן תאריך סיום");
-
-        const data = { classCode: code, title, startTime: start, endTime: end };
-        if(currentFileB64) data.imageUrl = currentFileB64;
-
-        try {
-            if(editId) {
-                await updateDoc(doc(db, "tasks", editId), data);
-            } else {
-                // יצירת המשימה
-                await addDoc(collection(db, "tasks"), data);
-                
-                // שליחת התראה לתלמידים דרך אוסף ה-notifications
-                await addDoc(collection(db, "notifications"), {
-                    classCode: code,
-                    title: "משימה חדשה: " + title,
-                    createdAt: serverTimestamp()
-                });
-            }
-            resetForm();
-        } catch (e) {
-            console.error("Error saving: ", e);
-            alert("שגיאה בשמירה");
-        }
-    };
-
-    window.processFile = (e) => {
-        const reader = new FileReader();
-        reader.onload = (ev) => { currentFileB64 = ev.target.result; document.getElementById('fileStatus').innerText  = "✅  תמונה צורפה"; };
-        reader.readAsDataURL(e.target.files[0]);
-    };
-
-    window.editTask = async (id) => {
-        const snap = await getDocs(collection(db, "tasks"));
-        const t = snap.docs.find(d => d.id === id).data();
-        document.getElementById('taskTitle').value = t.title;
-        document.getElementById('targetClass').value = t.classCode;
-        document.getElementById('startTime').value = new Date(t.startTime).toISOString().slice(0,16);
-        document.getElementById('endTime').value = new Date(t.endTime).toISOString().slice(0,16);
-        document.getElementById('editingId').value = id;
-        document.getElementById('formTitle').innerText = "✏️ עריכת משימה";
-        document.getElementById('cancelBtn').classList.remove('hidden');
-        document.getElementById('formCard').scrollIntoView({behavior: 'smooth'});
-    };
-
-    window.resetForm = () => {
-        document.getElementById('taskTitle').value = ''; document.getElementById('editingId').value = '';
-        document.getElementById('fileStatus').innerText = ''; currentFileB64 = null;
-        document.getElementById('formTitle').innerText = "📝 פרסום משימה חדשה";
-        document.getElementById('cancelBtn').classList.add('hidden');
-    };
-
-    window.deleteTask = async (id) => { if(confirm("למחוק?")) await deleteDoc(doc(db, "tasks", id)); };
-
-    const daysArr = ["ראשון", "שני", "שלישי", "רביעי", "חמישי"];
-    window.loadClassSchedule = async () => {
-        const code = document.getElementById('scheduleClassSelect').value;
-        if(!code) return document.getElementById('scheduleEditorArea').classList.add('hidden');
-        const snap = await getDocs(query(collection(db, "classes"), where("code", "==", code)));
-        const schedule = snap.docs[0].data().schedule || {};
-        document.getElementById('daysContainer').innerHTML = daysArr.map((day, i) => {
-            const dayData = schedule[`day${i}`] || [];
-            return `<div class="day-row" id="day_${i}"><b>יום ${day}</b><div class="lessons-list">${dayData.map(l => createLessonRow(l.subject, l.time)).join('')}</div><button onclick="addLesson(${i})" style="width:auto; padding:5px 10px; font-size:11px; margin-top:8px;">+ הוסף מקצוע</button></div>`;
+function loadActivity() {
+    onSnapshot(collection(db, "activity"), (snap) => {
+        const log = document.getElementById('activityLog');
+        let users = [];
+        snap.forEach(d => users.push(d.data()));
+        users.sort((a,b) => (b.lastSeen?.toMillis() || 0) - (a.lastSeen?.toMillis() || 0));
+        log.innerHTML = users.map(u => {
+            const isOnline = (new Date() - u.lastSeen?.toDate()) / 1000 < 300;
+            return `
+            <div class="activity-item">
+                <span><span class="status-dot ${isOnline?'online':''}"></span><b>${u.name}</b> (${u.classCode})</span>
+                <small>${isOnline ? 'מחובר/ת' : 'נראה/תה לאחרונה: ' + u.lastSeen?.toDate().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})}</small>
+            </div>`;
         }).join('');
-        document.getElementById('scheduleEditorArea').classList.remove('hidden');
-    };
+    });
+}
 
-    function createLessonRow(sub='', time='') {
-        return `<div class="lesson-row"><input type="text" placeholder="מקצוע" value="${sub}"> <input type="text" placeholder="שעה" value="${time}"> <button onclick="this.parentElement.remove()" style="background:var(--danger); width:30px; border-radius:8px;">X</button></div>`;
-    }
+function loadData() {
+    onSnapshot(query(collection(db, "classes"), where("teacherId", "==", teacherKey)), (snap) => {
+        const select = document.getElementById('targetClass'), schedSelect = document.getElementById('scheduleClassSelect'), list = document.getElementById('classesList');
+        select.innerHTML = ''; schedSelect.innerHTML = '<option value="">בחר כיתה...</option>'; list.innerHTML = '';
+        snap.forEach(cDoc => {
+            const c = cDoc.data();
+            classDocIds[c.code] = cDoc.id;
+            const opt = `<option value="${c.code}">${c.name}</option>`;
+            select.innerHTML += opt; schedSelect.innerHTML += opt;
+            list.innerHTML += `<div class="card"><h3>🏫 כיתה: ${c.name} (${c.code})</h3><div id="tasks_${c.code}"></div></div>`;
+            syncTasks(c.code);
+        });
+    });
+}
 
-    window.addLesson = (dayIdx) => {
-        const div = document.createElement('div'); div.innerHTML = createLessonRow();
-        document.querySelector(`#day_${dayIdx} .lessons-list`).appendChild(div.firstElementChild);
-    };
+function syncTasks(code) {
+    onSnapshot(query(collection(db, "tasks"), where("classCode", "==", code)), (snap) => {
+        const container = document.getElementById(`tasks_${code}`);
+        if(!container) return;
+        let tasks = [];
+        snap.forEach(d => tasks.push({id: d.id, ...d.data()}));
+        tasks.sort((a,b) => a.endTime - b.endTime);
+        container.innerHTML = tasks.map(t => `
+        <div class="task-item">
+            <div style="display:flex; justify-content:space-between; align-items:start;">
+                <div>
+                    <b>${t.title}</b><br>
+                    <small style="color:var(--edit);">סיום: ${new Date(t.endTime).toLocaleString('he-IL')}</small>
+                </div>
+                <div style="display:flex; gap:5px;">
+                    <button onclick="editTask('${t.id}')" style="width:35px; height:35px; background:var(--edit); padding:0;">✏️</button>
+                    <button onclick="deleteTask('${t.id}')" style="width:35px; height:35px; background:var(--danger); padding:0;">🗑️</button>
+                </div>
+            </div>
+            ${t.imageUrl ? `<img src="${t.imageUrl}" class="task-img-preview">` : ''}
+            <div id="subs-${t.id}" style="margin-top:15px;"></div>
+        </div>`).join('');
+        tasks.forEach(t => monitorSubmissions(t.id));
+    });
+}
 
-    window.saveSchedule = async () => {
-        const code = document.getElementById('scheduleClassSelect').value;
-        let scheduleObj = {};
-        for(let i=0; i<5; i++) {
-            let lessons = [];
-            document.querySelectorAll(`#day_${i} .lesson-row`).forEach(row => {
-                const ins = row.querySelectorAll('input');
-                if(ins[0].value.trim()) lessons.push({ subject: ins[0].value.trim(), time: ins[1].value.trim() });
+function monitorSubmissions(taskId) {
+    onSnapshot(query(collection(db, "submissions"), where("taskId", "==", taskId)), (snap) => {
+        const div = document.getElementById(`subs-${taskId}`);
+        if(!div) return;
+        let names = [];
+        snap.forEach(d => { if(d.data().completed) names.push(d.data().studentName); });
+        div.innerHTML = names.length > 0 ? 
+            `<b>הגישו (${names.length}):</b><br>` + names.map(n => `<span class="submission-chip">👤 ${n}</span>`).join('') : 
+            `<span style="opacity:0.5; font-size:12px;">אין הגשות עדיין</span>`;
+    });
+}
+
+window.saveTask = async () => {
+    const title = document.getElementById('taskTitle').value.trim() || "משימה",
+        code = document.getElementById('targetClass').value,
+        start = new Date(document.getElementById('startTime').value).getTime() || Date.now(),
+        end = new Date(document.getElementById('endTime').value).getTime(),
+        editId = document.getElementById('editingId').value;
+
+    if(!end) return alert("הזן תאריך סיום");
+
+    const data = { classCode: code, title, startTime: start, endTime: end };
+    if(currentFileB64) data.imageUrl = currentFileB64;
+
+    try {
+        if(editId) {
+            await updateDoc(doc(db, "tasks", editId), data);
+        } else {
+            await addDoc(collection(db, "tasks"), data);
+            
+            // שליחת התראה לתלמידים דרך אוסף ה-notifications
+            await addDoc(collection(db, "notifications"), {
+                classCode: code,
+                title: "משימה חדשה: " + title,
+                createdAt: serverTimestamp()
             });
-            scheduleObj[`day${i}`] = lessons;
         }
-        await updateDoc(doc(db, "classes", classDocIds[code]), { schedule: scheduleObj });
-        alert("נשמר בהצלחה!");
-    };
+        resetForm();
+    } catch (e) {
+        console.error("Error saving: ", e);
+        alert("שגיאה בשמירה");
+    }
+};
 
-    window.createClass = async () => {
-        const name = document.getElementById('newClassName').value.trim();
-        if(!name) return;
-        const code = Math.random().toString(36).substring(2, 7).toUpperCase();
-        await addDoc(collection(db, "classes"), { teacherId: teacherKey, name, code, schedule: {} });
-        alert("כיתה נוצרה! קוד: " + code);
-    };
+window.processFile = (e) => {
+    const reader = new FileReader();
+    reader.onload = (ev) => { currentFileB64 = ev.target.result; document.getElementById('fileStatus').innerText = "✅ תמונה צורפה"; };
+    reader.readAsDataURL(e.target.files[0]);
+};
 
-    window.logout = () => { localStorage.clear(); location.reload(); };
+window.editTask = async (id) => {
+    const snap = await getDocs(collection(db, "tasks"));
+    const t = snap.docs.find(d => d.id === id).data();
+    document.getElementById('taskTitle').value = t.title;
+    document.getElementById('targetClass').value = t.classCode;
+    document.getElementById('startTime').value = new Date(t.startTime).toISOString().slice(0,16);
+    document.getElementById('endTime').value = new Date(t.endTime).toISOString().slice(0,16);
+    document.getElementById('editingId').value = id;
+    document.getElementById('formTitle').innerText = "✏️ עריכת משימה";
+    document.getElementById('cancelBtn').classList.remove('hidden');
+    document.getElementById('formCard').scrollIntoView({behavior: 'smooth'});
+};
+
+window.resetForm = () => {
+    document.getElementById('taskTitle').value = ''; document.getElementById('editingId').value = '';
+    document.getElementById('fileStatus').innerText = ''; currentFileB64 = null;
+    document.getElementById('formTitle').innerText = "📝 פרסום משימה חדשה";
+    document.getElementById('cancelBtn').classList.add('hidden');
+};
+
+window.deleteTask = async (id) => { if(confirm("למחוק?")) await deleteDoc(doc(db, "tasks", id)); };
+
+const daysArr = ["ראשון", "שני", "שלישי", "רביעי", "חמישי"];
+window.loadClassSchedule = async () => {
+    const code = document.getElementById('scheduleClassSelect').value;
+    if(!code) return document.getElementById('scheduleEditorArea').classList.add('hidden');
+    const snap = await getDocs(query(collection(db, "classes"), where("code", "==", code)));
+    const schedule = snap.docs[0].data().schedule || {};
+    document.getElementById('daysContainer').innerHTML = daysArr.map((day, i) => {
+        const dayData = schedule[`day${i}`] || [];
+        return `<div class="day-row" id="day_${i}"><b>יום ${day}</b><div class="lessons-list">${dayData.map(l => createLessonRow(l.subject, l.time)).join('')}</div><button onclick="addLesson(${i})" style="width:auto; padding:5px 10px; font-size:11px; margin-top:8px;">+ הוסף מקצוע</button></div>`;
+    }).join('');
+    document.getElementById('scheduleEditorArea').classList.remove('hidden');
+};
+
+function createLessonRow(sub='', time='') {
+    return `<div class="lesson-row"><input type="text" placeholder="מקצוע" value="${sub}"> <input type="text" placeholder="שעה" value="${time}"> <button onclick="this.parentElement.remove()" style="background:var(--danger); width:30px; border-radius:8px;">X</button></div>`;
+}
+
+window.addLesson = (dayIdx) => {
+    const div = document.createElement('div'); div.innerHTML = createLessonRow();
+    document.querySelector(`#day_${dayIdx} .lessons-list`).appendChild(div.firstElementChild);
+};
+
+window.saveSchedule = async () => {
+    const code = document.getElementById('scheduleClassSelect').value;
+    let scheduleObj = {};
+    for(let i=0; i<5; i++) {
+        let lessons = [];
+        document.querySelectorAll(`#day_${i} .lesson-row`).forEach(row => {
+            const ins = row.querySelectorAll('input');
+            if(ins[0].value.trim()) lessons.push({ subject: ins[0].value.trim(), time: ins[1].value.trim() });
+        });
+        scheduleObj[`day${i}`] = lessons;
+    }
+    await updateDoc(doc(db, "classes", classDocIds[code]), { schedule: scheduleObj });
+    alert("נשמר בהצלחה!");
+};
+
+window.createClass = async () => {
+    const name = document.getElementById('newClassName').value.trim();
+    if(!name) return;
+    const code = Math.random().toString(36).substring(2, 7).toUpperCase();
+    await addDoc(collection(db, "classes"), { teacherId: teacherKey, name, code, schedule: {} });
+    alert("כיתה נוצרה! קוד: " + code);
+};
+
+window.logout = () => { localStorage.clear(); location.reload(); };
 </script>
 </body>
 </html>
