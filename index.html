@@ -3,239 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ניהול משימות - ממשק מורה פרימיום VIP</title>
+    <title>ניהול משימות - ממשק מורה זכוכית פרימיום</title>
     <style>
         :root {
-            --primary: #10b981;
-            --accent: #3b82f6;
-            --purple: #8b5cf6;
-            --edit: #f59e0b;
-            --danger: #ef4444;
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --glass-shadow: rgba(0, 0, 0, 0.4);
+            --primary: #10b981; --accent: #3b82f6; --purple: #8b5cf6; --edit: #f59e0b; --danger: #ef4444;
+            --glass-bg: rgba(255, 255, 255, 0.07); 
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: rgba(0, 0, 0, 0.35);
         }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 15px;
-            direction: rtl;
-            min-height: 100vh;
-            color: white;
-            background: radial-gradient(circle at top right, #1e3a8a, #0f172a, #000000);
+            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0; padding: 0; direction: rtl; min-height: 100vh; color: white;
+            background: radial-gradient(circle at top right, #1e3a8a, #0f172a, #000); 
             background-attachment: fixed;
-            -webkit-font-smoothing: antialiased;
         }
-
-        .container {
-            width: 100%;
-            max-width: 650px;
-            margin: 0 auto;
+        
+        /* תפריט ניווט דשבורד */
+        .nav-bar {
+            display: flex; justify-content: space-around; background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px); padding: 15px; border-bottom: 1px solid var(--glass-border);
+            position: sticky; top: 0; z-index: 1000;
         }
+        .nav-item {
+            opacity: 0.6; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s;
+            padding: 8px 15px; border-radius: 12px;
+        }
+        .nav-item.active { opacity: 1; background: var(--glass-bg); border: 1px solid var(--glass-border); }
 
+        .container { width: 100%; max-width: 700px; margin: 20px auto; padding: 0 15px; box-sizing: border-box; }
+        
         .card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 40px var(--glass-shadow);
-        }
-
-        h2, h3, h4 {
-            margin-top: 0;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+            background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border); border-radius: 28px; padding: 25px;
+            margin-bottom: 25px; box-shadow: 0 10px 40px var(--glass-shadow);
         }
 
         input, select, textarea {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 15px;
-            border: 1px solid var(--glass-border);
-            background: rgba(255, 255, 255, 0.06);
-            color: white;
-            box-sizing: border-box;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
+            width: 100%; padding: 14px; margin: 8px 0; border-radius: 14px;
+            border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05);
+            color: white; font-size: 16px; outline: none; transition: 0.3s;
         }
-
-        input:focus {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: var(--primary);
-        }
+        input:focus { background: rgba(255, 255, 255, 0.1); border-color: var(--primary); }
 
         button {
-            width: 100%;
-            padding: 16px;
-            border-radius: 16px;
-            border: none;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            width: 100%; padding: 15px; border-radius: 14px; border: none;
+            font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px;
         }
-
-        button:active { transform: scale(0.97); }
-
-        .btn-save { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .btn-save { background: var(--primary); color: white; }
         .btn-purple { background: var(--purple); color: white; }
-        .btn-outline { background: transparent; border: 1px solid white; color: white; }
-
-        .task-item {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 22px;
-            padding: 20px;
-            margin-top: 18px;
-            border-right: 6px solid var(--accent);
-            position: relative;
-            transition: 0.3s;
+        
+        /* עיצוב רשימות */
+        .task-item { 
+            background: rgba(255,255,255,0.05); border-radius: 22px; padding: 20px; 
+            margin-top: 20px; border-right: 6px solid var(--accent); position: relative;
         }
-
-        .day-row {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 20px;
-            border-radius: 20px;
-            margin-top: 15px;
-            border-right: 4px solid var(--purple);
+        .submission-chip {
+            display: inline-flex; align-items: center; background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--primary); padding: 5px 12px; border-radius: 15px;
+            margin: 4px; font-size: 13px; color: #fff;
         }
-
-        .lesson-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr auto;
-            gap: 10px;
-            margin-top: 10px;
+        
+        .day-row { 
+            background: rgba(255,255,255,0.03); padding: 18px; border-radius: 20px; 
+            margin-top: 15px; border-right: 4px solid var(--purple); 
         }
-
-        .activity-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .lesson-row { display: grid; grid-template-columns: 2fr 1fr auto; gap: 8px; margin-top: 8px; }
+        
+        .activity-item { 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; background: rgba(255,255,255,0.03); border-radius: 15px; margin-bottom: 10px;
         }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #555; margin-left: 8px; display: inline-block; }
+        .status-dot.online { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
 
-        .status-online {
-            color: var(--primary);
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .status-online::before {
-            content: "";
-            width: 8px;
-            height: 8px;
-            background: var(--primary);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--primary);
-        }
-
-        .sub-details {
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 18px;
-            padding: 15px;
-            margin-top: 15px;
-            font-size: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .task-img-preview {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 18px;
-            margin: 15px 0;
-            border: 1px solid var(--glass-border);
-        }
-
+        .task-img-preview { width: 100%; border-radius: 18px; margin: 15px 0; border: 1px solid var(--glass-border); }
         .hidden { display: none; }
         
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        @media (max-width: 480px) {
+            .nav-item { font-size: 12px; padding: 8px 10px; }
+        }
     </style>
 </head>
 <body>
 
+<div id="navBar" class="nav-bar hidden">
+    <div class="nav-item active" onclick="switchTab('tasks')">📝 משימות</div>
+    <div class="nav-item" onclick="switchTab('presence')">👥 נוכחות</div>
+    <div class="nav-item" onclick="switchTab('schedule')">📅 מערכת</div>
+    <div class="nav-item" onclick="switchTab('admin')">⚙️ ניהול</div>
+</div>
+
 <div class="container">
     <div id="loginArea" class="card">
-        <h2 style="text-align:center; font-size: 30px;">כניסת מורה 🍎</h2>
-        <p style="text-align:center; opacity:0.7; margin-bottom: 20px;">ניהול מערכת ראלי מטו"ס</p>
+        <h2 style="text-align:center;">כניסת מורה 🍎</h2>
         <input type="text" id="teacherUser" placeholder="שם משתמש">
         <input type="password" id="teacherPass" placeholder="סיסמה">
         <button class="btn-save" onclick="login()">התחברות למערכת</button>
     </div>
 
     <div id="dashboard" class="hidden">
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h3>שלום, <span id="displayName" style="color:var(--primary)"></span></h3>
-            <button onclick="logout()" style="width:auto; padding:10px 20px; background:rgba(239, 68, 68, 0.2); color:#ef4444; border:1px solid #ef4444; border-radius:12px;">יציאה</button>
-        </div>
-
-        <div class="card">
-            <h4>🟢 תלמידים מחוברים עכשיו</h4>
-            <div id="activityLog" style="max-height: 200px; overflow-y: auto;">
-                <p style="opacity:0.5;">טוען נתוני נוכחות...</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <h4>📅 עריכת מערכת שעות</h4>
-            <select id="scheduleClassSelect" onchange="loadClassSchedule()">
-                <option value="">בחר כיתה לעריכה...</option>
-            </select>
-            <div id="scheduleEditorArea" class="hidden">
-                <div id="daysContainer"></div>
-                <button class="btn-save" style="margin-top:20px;" onclick="saveSchedule()" id="saveScheduleBtn">💾 שמור מערכת שעות כיתתית</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <h4>🏫 יצירת כיתה חדשה</h4>
-            <div style="display:flex; gap:12px;">
-                <input type="text" id="newClassName" placeholder="שם כיתה (למשל: ז'3)" style="margin:0;">
-                <button onclick="createClass()" class="btn-purple" style="width:130px;">צור כיתה</button>
-            </div>
-        </div>
-
-        <div class="card" id="formCard">
-            <h4 id="formTitle">📝 פרסום משימה חדשה</h4>
-            <label style="font-size:12px; opacity:0.7;">כיתת יעד:</label>
-            <select id="targetClass"></select>
-            
-            <input type="text" id="taskTitle" placeholder="כותרת המשימה">
-            
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                <div>
-                    <label style="font-size:12px; opacity:0.7;">זמן התחלה:</label>
-                    <input type="datetime-local" id="startTime">
+        
+        <div id="tab-tasks" class="tab-content">
+            <div class="card" id="formCard">
+                <h4 id="formTitle">📝 פרסום משימה חדשה</h4>
+                <label>כיתת יעד:</label>
+                <select id="targetClass"></select>
+                <input type="text" id="taskTitle" placeholder="כותרת המשימה">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div><small>התחלה:</small><input type="datetime-local" id="startTime"></div>
+                    <div><small>סיום (דדליין):</small><input type="datetime-local" id="endTime"></div>
                 </div>
-                <div>
-                    <label style="font-size:12px; opacity:0.7;">סיום (דדליין):</label>
-                    <input type="datetime-local" id="endTime">
+                <input type="file" id="fileInput" class="hidden" onchange="processFile(event)">
+                <button onclick="document.getElementById('fileInput').click()" style="background:rgba(255,255,255,0.1); color:white; margin:10px 0;">🖼️ הוסף צילום משימה</button>
+                <div id="fileStatus" style="text-align:center; color:var(--primary); font-size:13px; font-weight:bold;"></div>
+                <input type="hidden" id="editingId">
+                <button id="submitBtn" class="btn-save" onclick="saveTask()">פרסם משימה לתלמידים</button>
+                <button id="cancelBtn" class="hidden" onclick="resetForm()" style="background:none; border:1px solid white; color:white; margin-top:10px;">ביטול עריכה</button>
+            </div>
+            <div id="classesList"></div>
+        </div>
+
+        <div id="tab-presence" class="tab-content hidden">
+            <div class="card">
+                <h4>🟢 תלמידים פעילים (זמן אמת)</h4>
+                <div id="activityLog">טוען נתונים...</div>
+            </div>
+        </div>
+
+        <div id="tab-schedule" class="tab-content hidden">
+            <div class="card">
+                <h4>📅 עריכת מערכת שעות כיתתית</h4>
+                <select id="scheduleClassSelect" onchange="loadClassSchedule()">
+                    <option value="">בחר כיתה...</option>
+                </select>
+                <div id="scheduleEditorArea" class="hidden">
+                    <div id="daysContainer"></div>
+                    <button class="btn-save" style="margin-top:20px;" onclick="saveSchedule()" id="saveScheduleBtn">💾 שמור מערכת שעות</button>
                 </div>
             </div>
-
-            <input type="file" id="fileInput" class="hidden" onchange="processFile(event)" accept="image/*">
-            <button onclick="document.getElementById('fileInput').click()" style="background:rgba(255,255,255,0.08); color:white; margin:15px 0; border: 1px dashed rgba(255,255,255,0.3);">🖼️ צרף צילום דף עבודה / תמונה</button>
-            <div id="fileStatus" style="text-align:center; color:var(--primary); font-size:13px; font-weight:bold;"></div>
-
-            <input type="hidden" id="editingId">
-            <button id="submitBtn" class="btn-save" onclick="saveTask()">🚀 פרסם משימה לתלמידים</button>
-            <button id="cancelBtn" class="hidden btn-outline" onclick="resetForm()" style="margin-top:10px;">ביטול עריכה</button>
         </div>
 
-        <div id="classesList"></div>
+        <div id="tab-admin" class="tab-content hidden">
+            <div class="card">
+                <h4>🏫 ניהול כיתות</h4>
+                <input type="text" id="newClassName" placeholder="שם כיתה חדשה">
+                <button onclick="createClass()" class="btn-purple">צור כיתה וקבל קוד</button>
+            </div>
+            <div class="card">
+                <h4>👤 הגדרות חשבון</h4>
+                <p>מחובר בתור: <b id="displayName"></b></p>
+                <button onclick="logout()" style="background:var(--danger); color:white;">התנתק מהמערכת</button>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -256,51 +176,52 @@
     const db = getFirestore(app);
     let teacherKey = "", currentFileB64 = null, classDocIds = {};
 
-    // פונקציית התחברות עם שמירה במכשיר (Auto-login)
+    // ניהול טאבים
+    window.switchTab = (tab) => {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.remove('hidden');
+        event.currentTarget.classList.add('active');
+    };
+
+    // כניסה וזכירה במכשיר
     window.login = () => {
         const u = document.getElementById('teacherUser').value.trim();
         const p = document.getElementById('teacherPass').value.trim();
-        if(!u || !p) return alert("נא להזין שם וסיסמה");
-
+        if(!u || !p) return alert("הזן פרטים");
         teacherKey = u + "_" + p;
         localStorage.setItem('teacherUser', u);
         localStorage.setItem('teacherPass', p);
-        
-        setupDashboard(u);
+        startApp(u);
     };
 
-    function setupDashboard(username) {
-        document.getElementById('displayName').innerText = username;
+    function startApp(u) {
+        document.getElementById('displayName').innerText = u;
         document.getElementById('loginArea').classList.add('hidden');
+        document.getElementById('navBar').classList.remove('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         loadData();
         loadActivity();
     }
 
-    // בדיקה בטעינה אם המורה כבר מחובר
     window.onload = () => {
-        const u = localStorage.getItem('teacherUser');
-        const p = localStorage.getItem('teacherPass');
-        if(u && p) {
-            teacherKey = u + "_" + p;
-            setupDashboard(u);
-        }
+        const u = localStorage.getItem('teacherUser'), p = localStorage.getItem('teacherPass');
+        if(u && p) { teacherKey = u + "_" + p; startApp(u); }
     };
 
-    // ניטור נוכחות חיה
+    // נוכחות
     function loadActivity() {
         onSnapshot(collection(db, "activity"), (snap) => {
             const log = document.getElementById('activityLog');
             let users = [];
             snap.forEach(d => users.push(d.data()));
             users.sort((a,b) => (b.lastSeen?.toMillis() || 0) - (a.lastSeen?.toMillis() || 0));
-            
             log.innerHTML = users.map(u => {
                 const isOnline = (new Date() - u.lastSeen?.toDate()) / 1000 < 300;
                 return `
                 <div class="activity-item">
-                    <span><b>${u.name}</b> (${u.classCode})</span>
-                    <span class="${isOnline ? 'status-online' : ''}">${isOnline ? 'מחובר' : 'נראה לאחרונה: ' + u.lastSeen?.toDate().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})}</span>
+                    <span><span class="status-dot ${isOnline?'online':''}"></span><b>${u.name}</b> (${u.classCode})</span>
+                    <small>${isOnline ? 'מחובר/ת' : 'נראה/תה לאחרונה: ' + u.lastSeen?.toDate().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})}</small>
                 </div>`;
             }).join('');
         });
@@ -308,102 +229,73 @@
 
     // טעינת כיתות ומשימות
     function loadData() {
-        const q = query(collection(db, "classes"), where("teacherId", "==", teacherKey));
-        onSnapshot(q, (snap) => {
-            const select = document.getElementById('targetClass');
-            const schedSelect = document.getElementById('scheduleClassSelect');
-            const list = document.getElementById('classesList');
-            
-            select.innerHTML = '';
-            schedSelect.innerHTML = '<option value="">בחר כיתה...</option>';
-            list.innerHTML = '';
-            
+        onSnapshot(query(collection(db, "classes"), where("teacherId", "==", teacherKey)), (snap) => {
+            const select = document.getElementById('targetClass'), schedSelect = document.getElementById('scheduleClassSelect'), list = document.getElementById('classesList');
+            select.innerHTML = ''; schedSelect.innerHTML = '<option value="">בחר כיתה...</option>'; list.innerHTML = '';
             snap.forEach(cDoc => {
                 const c = cDoc.data();
                 classDocIds[c.code] = cDoc.id;
-                
-                select.innerHTML += `<option value="${c.code}">${c.name}</option>`;
-                schedSelect.innerHTML += `<option value="${c.code}">${c.name}</option>`;
-                
-                list.innerHTML += `
-                    <div class="card">
-                        <h3 style="color:var(--accent);">🏫 כיתה: ${c.name} (${c.code})</h3>
-                        <div id="tasks_${c.code}"></div>
-                    </div>`;
+                const opt = `<option value="${c.code}">${c.name}</option>`;
+                select.innerHTML += opt; schedSelect.innerHTML += opt;
+                list.innerHTML += `<div class="card"><h3>🏫 כיתה: ${c.name} (${c.code})</h3><div id="tasks_${c.code}"></div></div>`;
                 syncTasks(c.code);
             });
         });
     }
 
-    // סינכרון משימות ומיון כרונולוגי
     function syncTasks(code) {
-        const q = query(collection(db, "tasks"), where("classCode", "==", code));
-        onSnapshot(q, (snap) => {
+        onSnapshot(query(collection(db, "tasks"), where("classCode", "==", code)), (snap) => {
             const container = document.getElementById(`tasks_${code}`);
             if(!container) return;
             let tasks = [];
             snap.forEach(d => tasks.push({id: d.id, ...d.data()}));
-            
-            // מיון: המשימה הכי קרובה לדדליין ראשונה
             tasks.sort((a,b) => a.endTime - b.endTime);
-            
             container.innerHTML = tasks.map(t => `
                 <div class="task-item">
                     <div style="display:flex; justify-content:space-between; align-items:start;">
                         <div>
-                            <b style="font-size:18px;">${t.title}</b><br>
-                            <small style="color:var(--edit);">הגשה עד: ${new Date(t.endTime).toLocaleString('he-IL')}</small>
+                            <b>${t.title}</b><br>
+                            <small style="color:var(--edit);">סיום: ${new Date(t.endTime).toLocaleString('he-IL')}</small>
                         </div>
-                        <div style="display:flex; gap:8px;">
-                            <button onclick="editTask('${t.id}')" style="width:40px; height:40px; background:var(--edit); padding:0;">✏️</button>
-                            <button onclick="deleteTask('${t.id}')" style="width:40px; height:40px; background:var(--danger); padding:0;">🗑️</button>
+                        <div style="display:flex; gap:5px;">
+                            <button onclick="editTask('${t.id}')" style="width:35px; height:35px; background:var(--edit); padding:0;">✏️</button>
+                            <button onclick="deleteTask('${t.id}')" style="width:35px; height:35px; background:var(--danger); padding:0;">🗑️</button>
                         </div>
                     </div>
                     ${t.imageUrl ? `<img src="${t.imageUrl}" class="task-img-preview">` : ''}
-                    <div id="subs-${t.id}" class="sub-details">טוען הגשות...</div>
+                    <div id="subs-${t.id}" style="margin-top:15px;"></div>
                 </div>`).join('');
-            
-            tasks.forEach(t => loadSubmissions(t.id));
+            tasks.forEach(t => monitorSubmissions(t.id));
         });
     }
 
-    // מעקב הגשות
-    function loadSubmissions(taskId) {
+    function monitorSubmissions(taskId) {
         onSnapshot(query(collection(db, "submissions"), where("taskId", "==", taskId)), (snap) => {
             const div = document.getElementById(`subs-${taskId}`);
             if(!div) return;
             let names = [];
             snap.forEach(d => { if(d.data().completed) names.push(d.data().studentName); });
-            div.innerHTML = names.length > 0 ? `<b>הגישו (${names.length}):</b> ` + names.join(', ') : "אין הגשות עדיין";
+            div.innerHTML = names.length > 0 ? 
+                `<b>הגישו (${names.length}):</b><br>` + names.map(n => `<span class="submission-chip">👤 ${n}</span>`).join('') : 
+                `<span style="opacity:0.5; font-size:12px;">אין הגשות עדיין</span>`;
         });
     }
 
-    // שמירת משימה
     window.saveTask = async () => {
-        const title = document.getElementById('taskTitle').value.trim() || "משימה";
-        const code = document.getElementById('targetClass').value;
-        const start = new Date(document.getElementById('startTime').value).getTime() || Date.now();
-        const end = new Date(document.getElementById('endTime').value).getTime();
-        const editId = document.getElementById('editingId').value;
-        
-        if(!end) return alert("חובה לקבוע תאריך סיום");
-
+        const title = document.getElementById('taskTitle').value.trim() || "משימה", code = document.getElementById('targetClass').value,
+              start = new Date(document.getElementById('startTime').value).getTime() || Date.now(),
+              end = new Date(document.getElementById('endTime').value).getTime(), editId = document.getElementById('editingId').value;
+        if(!end) return alert("הזן תאריך סיום");
         const data = { classCode: code, title, startTime: start, endTime: end };
         if(currentFileB64) data.imageUrl = currentFileB64;
-
         if(editId) await updateDoc(doc(db, "tasks", editId), data);
         else await addDoc(collection(db, "tasks"), data);
-        
         resetForm();
-        alert("המשימה פורסמה בהצלחה!");
     };
 
     window.processFile = (e) => {
         const reader = new FileReader();
-        reader.onload = (ev) => {
-            currentFileB64 = ev.target.result;
-            document.getElementById('fileStatus').innerText = "✅ תמונה נטענה";
-        };
+        reader.onload = (ev) => { currentFileB64 = ev.target.result; document.getElementById('fileStatus').innerText = "✅ תמונה צורפה"; };
         reader.readAsDataURL(e.target.files[0]);
     };
 
@@ -421,60 +313,39 @@
     };
 
     window.resetForm = () => {
-        document.getElementById('taskTitle').value = '';
-        document.getElementById('editingId').value = '';
-        document.getElementById('fileStatus').innerText = '';
-        currentFileB64 = null;
+        document.getElementById('taskTitle').value = ''; document.getElementById('editingId').value = '';
+        document.getElementById('fileStatus').innerText = ''; currentFileB64 = null;
         document.getElementById('formTitle').innerText = "📝 פרסום משימה חדשה";
         document.getElementById('cancelBtn').classList.add('hidden');
     };
 
-    window.deleteTask = async (id) => { if(confirm("למחוק את המשימה?")) await deleteDoc(doc(db, "tasks", id)); };
+    window.deleteTask = async (id) => { if(confirm("למחוק?")) await deleteDoc(doc(db, "tasks", id)); };
 
-    // ניהול מערכת שעות
+    // מערכת שעות
     const daysArr = ["ראשון", "שני", "שלישי", "רביעי", "חמישי"];
     window.loadClassSchedule = async () => {
         const code = document.getElementById('scheduleClassSelect').value;
         if(!code) return document.getElementById('scheduleEditorArea').classList.add('hidden');
-        
-        const q = query(collection(db, "classes"), where("code", "==", code));
-        const snap = await getDocs(q);
+        const snap = await getDocs(query(collection(db, "classes"), where("code", "==", code)));
         const schedule = snap.docs[0].data().schedule || {};
-        
         document.getElementById('daysContainer').innerHTML = daysArr.map((day, i) => {
             const dayData = schedule[`day${i}`] || [];
-            return `
-                <div class="day-row" id="day_${i}">
-                    <b style="color:var(--purple); font-size:18px;">יום ${day}</b>
-                    <div class="lessons-list" style="margin-top:10px;">
-                        ${dayData.map(l => createLessonRow(l.subject, l.time)).join('')}
-                    </div>
-                    <button onclick="addLesson(${i})" style="width:auto; padding:5px 12px; font-size:12px; background:rgba(255,255,255,0.1); margin-top:10px;">+ הוסף מקצוע</button>
-                </div>`;
+            return `<div class="day-row" id="day_${i}"><b>יום ${day}</b><div class="lessons-list">${dayData.map(l => createLessonRow(l.subject, l.time)).join('')}</div><button onclick="addLesson(${i})" style="width:auto; padding:5px 10px; font-size:11px; margin-top:8px;">+ הוסף מקצוע</button></div>`;
         }).join('');
         document.getElementById('scheduleEditorArea').classList.remove('hidden');
     };
 
     function createLessonRow(sub='', time='') {
-        return `
-            <div class="lesson-row">
-                <input type="text" placeholder="מקצוע" value="${sub}" style="margin:0; padding:8px;">
-                <input type="text" placeholder="שעה" value="${time}" style="margin:0; padding:8px;">
-                <button onclick="this.parentElement.remove()" style="background:var(--danger); width:35px; border-radius:8px;">X</button>
-            </div>`;
+        return `<div class="lesson-row"><input type="text" placeholder="מקצוע" value="${sub}"> <input type="text" placeholder="שעה" value="${time}"> <button onclick="this.parentElement.remove()" style="background:var(--danger); width:30px; border-radius:8px;">X</button></div>`;
     }
 
     window.addLesson = (dayIdx) => {
-        const div = document.createElement('div');
-        div.innerHTML = createLessonRow();
+        const div = document.createElement('div'); div.innerHTML = createLessonRow();
         document.querySelector(`#day_${dayIdx} .lessons-list`).appendChild(div.firstElementChild);
     };
 
     window.saveSchedule = async () => {
         const code = document.getElementById('scheduleClassSelect').value;
-        const btn = document.getElementById('saveScheduleBtn');
-        btn.innerText = "שומר... ⏳";
-        
         let scheduleObj = {};
         for(let i=0; i<5; i++) {
             let lessons = [];
@@ -484,10 +355,8 @@
             });
             scheduleObj[`day${i}`] = lessons;
         }
-
         await updateDoc(doc(db, "classes", classDocIds[code]), { schedule: scheduleObj });
-        btn.innerText = "💾 שמור מערכת שעות כיתתית";
-        alert("המערכת עודכנה לכל התלמידים בכיתה!");
+        alert("נשמר בהצלחה!");
     };
 
     window.createClass = async () => {
@@ -495,8 +364,7 @@
         if(!name) return;
         const code = Math.random().toString(36).substring(2, 7).toUpperCase();
         await addDoc(collection(db, "classes"), { teacherId: teacherKey, name, code, schedule: {} });
-        document.getElementById('newClassName').value = '';
-        alert("כיתה נוצרה בהצלחה! קוד כיתה: " + code);
+        alert("כיתה נוצרה! קוד: " + code);
     };
 
     window.logout = () => { localStorage.clear(); location.reload(); };
