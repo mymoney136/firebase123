@@ -7,18 +7,16 @@
     <style>
         :root {
             --primary: #10b981; --accent: #3b82f6; --purple: #8b5cf6; --edit: #f59e0b; --danger: #ef4444;
-            --glass-bg: rgba(255, 255, 255, 0.07); 
+            --glass-bg: rgba(255, 255, 255, 0.07);
             --glass-border: rgba(255, 255, 255, 0.15);
             --glass-shadow: rgba(0, 0, 0, 0.35);
         }
         body {
             font-family: -apple-system, system-ui, sans-serif;
             margin: 0; padding: 0; direction: rtl; min-height: 100vh; color: white;
-            background: radial-gradient(circle at top right, #1e3a8a, #0f172a, #000); 
+            background: radial-gradient(circle at top right, #1e3a8a, #0f172a, #000);
             background-attachment: fixed;
         }
-        
-        /* תפריט ניווט דשבורד */
         .nav-bar {
             display: flex; justify-content: space-around; background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(15px); padding: 15px; border-bottom: 1px solid var(--glass-border);
@@ -29,32 +27,26 @@
             padding: 8px 15px; border-radius: 12px;
         }
         .nav-item.active { opacity: 1; background: var(--glass-bg); border: 1px solid var(--glass-border); }
-
         .container { width: 100%; max-width: 700px; margin: 20px auto; padding: 0 15px; box-sizing: border-box; }
-        
         .card {
             background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border); border-radius: 28px; padding: 25px;
             margin-bottom: 25px; box-shadow: 0 10px 40px var(--glass-shadow);
         }
-
         input, select, textarea {
             width: 100%; padding: 14px; margin: 8px 0; border-radius: 14px;
             border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05);
             color: white; font-size: 16px; outline: none; transition: 0.3s;
         }
         input:focus { background: rgba(255, 255, 255, 0.1); border-color: var(--primary); }
-
         button {
             width: 100%; padding: 15px; border-radius: 14px; border: none;
             font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px;
         }
         .btn-save { background: var(--primary); color: white; }
         .btn-purple { background: var(--purple); color: white; }
-        
-        /* עיצוב רשימות */
-        .task-item { 
-            background: rgba(255,255,255,0.05); border-radius: 22px; padding: 20px; 
+        .task-item {
+            background: rgba(255,255,255,0.05); border-radius: 22px; padding: 20px;
             margin-top: 20px; border-right: 6px solid var(--accent); position: relative;
         }
         .submission-chip {
@@ -62,26 +54,19 @@
             border: 1px solid var(--primary); padding: 5px 12px; border-radius: 15px;
             margin: 4px; font-size: 13px; color: #fff;
         }
-        
-        .day-row { 
-            background: rgba(255,255,255,0.03); padding: 18px; border-radius: 20px; 
-            margin-top: 15px; border-right: 4px solid var(--purple); 
+        .day-row {
+            background: rgba(255,255,255,0.03); padding: 18px; border-radius: 20px;
+            margin-top: 15px; border-right: 4px solid var(--purple);
         }
         .lesson-row { display: grid; grid-template-columns: 2fr 1fr auto; gap: 8px; margin-top: 8px; }
-        
-        .activity-item { 
+        .activity-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 12px; background: rgba(255,255,255,0.03); border-radius: 15px; margin-bottom: 10px;
         }
         .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #555; margin-left: 8px; display: inline-block; }
         .status-dot.online { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
-
         .task-img-preview { width: 100%; border-radius: 18px; margin: 15px 0; border: 1px solid var(--glass-border); }
         .hidden { display: none; }
-        
-        @media (max-width: 480px) {
-            .nav-item { font-size: 12px; padding: 8px 10px; }
-        }
     </style>
 </head>
 <body>
@@ -102,7 +87,6 @@
     </div>
 
     <div id="dashboard" class="hidden">
-        
         <div id="tab-tasks" class="tab-content">
             <div class="card" id="formCard">
                 <h4 id="formTitle">📝 פרסום משימה חדשה</h4>
@@ -155,7 +139,6 @@
                 <button onclick="logout()" style="background:var(--danger); color:white;">התנתק מהמערכת</button>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -176,15 +159,13 @@
     const db = getFirestore(app);
     let teacherKey = "", currentFileB64 = null, classDocIds = {};
 
-    // ניהול טאבים
     window.switchTab = (tab) => {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('tab-' + tab).classList.remove('hidden');
-        event.currentTarget.classList.add('active');
+        if (event) event.currentTarget.classList.add('active');
     };
 
-    // כניסה וזכירה במכשיר
     window.login = () => {
         const u = document.getElementById('teacherUser').value.trim();
         const p = document.getElementById('teacherPass').value.trim();
@@ -209,7 +190,6 @@
         if(u && p) { teacherKey = u + "_" + p; startApp(u); }
     };
 
-    // נוכחות
     function loadActivity() {
         onSnapshot(collection(db, "activity"), (snap) => {
             const log = document.getElementById('activityLog');
@@ -227,7 +207,6 @@
         });
     }
 
-    // טעינת כיתות ומשימות
     function loadData() {
         onSnapshot(query(collection(db, "classes"), where("teacherId", "==", teacherKey)), (snap) => {
             const select = document.getElementById('targetClass'), schedSelect = document.getElementById('scheduleClassSelect'), list = document.getElementById('classesList');
@@ -251,20 +230,20 @@
             snap.forEach(d => tasks.push({id: d.id, ...d.data()}));
             tasks.sort((a,b) => a.endTime - b.endTime);
             container.innerHTML = tasks.map(t => `
-                <div class="task-item">
-                    <div style="display:flex; justify-content:space-between; align-items:start;">
-                        <div>
-                            <b>${t.title}</b><br>
-                            <small style="color:var(--edit);">סיום: ${new Date(t.endTime).toLocaleString('he-IL')}</small>
-                        </div>
-                        <div style="display:flex; gap:5px;">
-                            <button onclick="editTask('${t.id}')" style="width:35px; height:35px; background:var(--edit); padding:0;">✏️</button>
-                            <button onclick="deleteTask('${t.id}')" style="width:35px; height:35px; background:var(--danger); padding:0;">🗑️</button>
-                        </div>
+            <div class="task-item">
+                <div style="display:flex; justify-content:space-between; align-items:start;">
+                    <div>
+                        <b>${t.title}</b><br>
+                        <small style="color:var(--edit);">סיום: ${new Date(t.endTime).toLocaleString('he-IL')}</small>
                     </div>
-                    ${t.imageUrl ? `<img src="${t.imageUrl}" class="task-img-preview">` : ''}
-                    <div id="subs-${t.id}" style="margin-top:15px;"></div>
-                </div>`).join('');
+                    <div style="display:flex; gap:5px;">
+                        <button onclick="editTask('${t.id}')" style="width:35px; height:35px; background:var(--edit); padding:0;">✏️</button>
+                        <button onclick="deleteTask('${t.id}')" style="width:35px; height:35px; background:var(--danger); padding:0;">🗑️</button>
+                    </div>
+                </div>
+                ${t.imageUrl ? `<img src="${t.imageUrl}" class="task-img-preview">` : ''}
+                <div id="subs-${t.id}" style="margin-top:15px;"></div>
+            </div>`).join('');
             tasks.forEach(t => monitorSubmissions(t.id));
         });
     }
@@ -275,27 +254,48 @@
             if(!div) return;
             let names = [];
             snap.forEach(d => { if(d.data().completed) names.push(d.data().studentName); });
-            div.innerHTML = names.length > 0 ? 
-                `<b>הגישו (${names.length}):</b><br>` + names.map(n => `<span class="submission-chip">👤 ${n}</span>`).join('') : 
-                `<span style="opacity:0.5; font-size:12px;">אין הגשות עדיין</span>`;
+            div.innerHTML = names.length > 0 ?
+            `<b>הגישו (${names.length}):</b><br>` + names.map(n => `<span class="submission-chip">👤 ${n}</span>`).join('') :
+            `<span style="opacity:0.5; font-size:12px;">אין הגשות עדיין</span>`;
         });
     }
 
     window.saveTask = async () => {
-        const title = document.getElementById('taskTitle').value.trim() || "משימה", code = document.getElementById('targetClass').value,
+        const title = document.getElementById('taskTitle').value.trim() || "משימה", 
+              code = document.getElementById('targetClass').value,
               start = new Date(document.getElementById('startTime').value).getTime() || Date.now(),
-              end = new Date(document.getElementById('endTime').value).getTime(), editId = document.getElementById('editingId').value;
+              end = new Date(document.getElementById('endTime').value).getTime(), 
+              editId = document.getElementById('editingId').value;
+
         if(!end) return alert("הזן תאריך סיום");
+
         const data = { classCode: code, title, startTime: start, endTime: end };
         if(currentFileB64) data.imageUrl = currentFileB64;
-        if(editId) await updateDoc(doc(db, "tasks", editId), data);
-        else await addDoc(collection(db, "tasks"), data);
-        resetForm();
+
+        try {
+            if(editId) {
+                await updateDoc(doc(db, "tasks", editId), data);
+            } else {
+                // יצירת המשימה
+                await addDoc(collection(db, "tasks"), data);
+                
+                // שליחת התראה לתלמידים דרך אוסף ה-notifications
+                await addDoc(collection(db, "notifications"), {
+                    classCode: code,
+                    title: "משימה חדשה: " + title,
+                    createdAt: serverTimestamp()
+                });
+            }
+            resetForm();
+        } catch (e) {
+            console.error("Error saving: ", e);
+            alert("שגיאה בשמירה");
+        }
     };
 
     window.processFile = (e) => {
         const reader = new FileReader();
-        reader.onload = (ev) => { currentFileB64 = ev.target.result; document.getElementById('fileStatus').innerText = "✅ תמונה צורפה"; };
+        reader.onload = (ev) => { currentFileB64 = ev.target.result; document.getElementById('fileStatus').innerText  = "✅  תמונה צורפה"; };
         reader.readAsDataURL(e.target.files[0]);
     };
 
@@ -321,7 +321,6 @@
 
     window.deleteTask = async (id) => { if(confirm("למחוק?")) await deleteDoc(doc(db, "tasks", id)); };
 
-    // מערכת שעות
     const daysArr = ["ראשון", "שני", "שלישי", "רביעי", "חמישי"];
     window.loadClassSchedule = async () => {
         const code = document.getElementById('scheduleClassSelect').value;
